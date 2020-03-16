@@ -3,8 +3,8 @@
 #The SVG is easier to style with CSS, and hook JS events to in browser.
 #python3 -m venv venv
 #. ./venv/bin/activate
-#pip install flask matplotlib
-#python flask_matplotlib.py
+#pip install flask matplotlib pandas
+#python3 run.py
 #"""
 import io
 import numpy as np
