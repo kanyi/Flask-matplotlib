@@ -10,10 +10,11 @@ import io
 import numpy as np
 import pandas as pd
 import random
-from flask import Flask, Response, request
+from flask import Flask, Response, request, render_template
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.backends.backend_svg import FigureCanvasSVG
 from matplotlib.figure import Figure
+import build_graph
 
 
 app = Flask(__name__)
@@ -25,45 +26,46 @@ def index():
     num_x_points = int(request.args.get("num_x_points", 50))
     df = pd.DataFrame(np.random.randint(0,100,size=(16, 8)), columns=list('ABCDEFGH'))
     array = df.to_numpy(dtype=int)
-    return f"""
-    <h1>Flask and matplotlib</h1>
-    <h2>Random data with num_x_points={num_x_points}</h2>
-    <form method=get action="/">
-      <input name="num_x_points" type=number value="{num_x_points}" />
-      <input type=submit value="update graph">
-    </form>
-    <h3>Plot as a png</h3>
-    <img src="/matplot-as-image-{num_x_points}.png"
-         alt="random points as png"
-         height="200">
-
-    <h3>Plot as a SVG</h3>
-    <img src="/matplot-as-image-{num_x_points}.svg"
-         alt="random points as svg"
-         height="200">
-        
-    <h3>Heatmap</h3>
-    <p>Pandas dataframe: <br> {df}</p>
-    <p>NumPy array: <br> {array}</p>    
-    <img src="/heatmap-as-image-{df}.svg"
-         alt="missing random points picture as svg"
-         height="400">
-    """
+    heatmap_graph = build_graph.build_heatmap_df_to_png(df)
+    #return f"""
+    #<h1>Flask and matplotlib</h1>
+    #<h2>Random data with num_x_points={num_x_points}</h2>
+    #<form method=get action="/">
+    #  <input name="num_x_points" type=number value="{num_x_points}" />
+    #  <input type=submit value="update graph">
+    #</form>
+    #<h3>Plot as a png</h3>
+    #<img src="/matplot-as-image-{num_x_points}.png"
+    #     alt="random points as png"
+    #     height="200">
+    #<h3>Plot as a SVG</h3>
+    #<img src="/matplot-as-image-{num_x_points}.svg"
+    #     alt="random points as svg"
+    #     height="200">
+    #    
+    #<h3>Heatmap</h3>
+    #<p>Pandas dataframe: <br> {df}</p>
+    #<p>NumPy array: <br> {array}</p>    
+    #<img src="/heatmap-as-image-{df}.svg"
+    #     alt="missing random points picture as svg"
+    #     height="400">
+    #"""
     # in a real app you probably want to use a flask template:
     # from flask import render_template
-    # return render_template("yourtemplate.html", num_x_points=num_x_points)
+    return render_template("index.html", num_x_points=num_x_points, dataframe=df, array=array, heatmap_graph=heatmap_graph)
 
 
-@app.route("/heatmap-as-image.svg")
+@app.route("/heatmap-as-image-<df>.svg")
 def plot_heatmap(df):
     #df = generate_df()
     fig = Figure()
     axes = fig.add_subplot(1,1,1)
     axes.imshow(df)
-    
+
     output = io.BytesIO()
     FigureCanvasSVG(fig).print_svg(output)
     return Response(output.getvalue(), mimetype="image/svg+xml")
+
 
 @app.route("/matplot-as-image-<int:num_x_points>.png")
 def plot_png(num_x_points=50):
