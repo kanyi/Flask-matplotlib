@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+<h1>Flask and matplotlib</h1>
+<h2>Random data with num_x_points={{num_x_points}}</h2>
+<form method=get action="/">
+  <input name="num_x_points" type=number value="{{num_x_points}}" />
+  <input type=submit value="update graph">
+</form>
+<div class="flex-container">
+    <div>
+    <h3>Plot as a png</h3>
+        <img src="/matplot-as-image-{{num_x_points}}.png"
+        alt="random points as png"
+        height="200">
+    </div>
+    <div>
+    <h3>Plot as a SVG</h3>
+        <img src="/matplot-as-image-{{num_x_points}}.svg"
+            alt="random points as svg"
+            height="200">
+        </div>
+</div>    
+<h3>Heatmap</h3>
+<p>Pandas dataframe: <br> {{dataframe}}</p>
+<p>NumPy array: <br> {{array}}</p>    
+<img src="/heatmap-as-image-{{dataframe}}.svg"
+     alt="missing random points picture as svg"
+     height="400">
+<div>
+    <img src='{{heatmap_graph}}' alt="missing png">
+</div>
+</body>
+</html>
