@@ -9,7 +9,7 @@ import pandas as pd
 #fig1 = go.Figure(data=go.Bar(y=[2, 3, 1]))
 #fig1.write_html('first_figure.html', auto_open=True)
 
-df = pd.read_csv('weather_BME280_sensor_data.txt', sep=" ", names=('Date', 'Time', 'Temp', 'Pressure', 'Humidity'))
+df = pd.read_csv('./bme280/weather_BME280_sensor_data.txt', sep=" ", names=('Date', 'Time', 'Temp', 'Pressure', 'Humidity'))
 df['DateTime'] = df['Date'] + " " + df['Time']
 df['dt'] = pd.to_datetime(df['DateTime'])
 # print(df)
